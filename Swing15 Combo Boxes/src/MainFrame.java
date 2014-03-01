@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 public class MainFrame extends JFrame {
@@ -60,6 +62,7 @@ public class MainFrame extends JFrame {
 		add(formPanel, BorderLayout.WEST);
 
 		setSize(600, 500);
+		setMinimumSize(new Dimension(500,400));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -106,10 +109,17 @@ public class MainFrame extends JFrame {
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 		
 		exitItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
+
+				int action = JOptionPane.showConfirmDialog(MainFrame.this,
+						"Do you really want to quit?", "Confirm Exit",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (action == JOptionPane.OK_OPTION) {
+					System.exit(0);
+				}
 			}
 		});
 
