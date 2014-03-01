@@ -1,12 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 public class MainFrame extends JFrame {
 
@@ -95,6 +97,19 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 				formPanel.setVisible(menuItem.isSelected());
+			}
+		});
+		
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		exitItem.setMnemonic(KeyEvent.VK_X);
+		
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		
+		exitItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
 			}
 		});
 

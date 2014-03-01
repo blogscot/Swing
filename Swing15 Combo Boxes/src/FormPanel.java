@@ -4,6 +4,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -61,6 +62,14 @@ public class FormPanel extends JPanel {
 		maleRadio.setActionCommand("Male");
 		femaleRadio.setActionCommand("Female");
 
+		okBtn = new JButton("OK");
+
+		// Set up Mnemonics
+		okBtn.setMnemonic(KeyEvent.VK_O);
+		nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+		nameLabel.setLabelFor(nameField);
+
+		
 		// Set up gender radios
 		genderGroup.add(maleRadio);
 		genderGroup.add(femaleRadio);
@@ -99,8 +108,6 @@ public class FormPanel extends JPanel {
 		empCombo.setModel(empModel);
 		empCombo.setSelectedIndex(0);
 		empCombo.setEditable(true);
-
-		okBtn = new JButton("OK");
 
 		okBtn.addActionListener(new ActionListener() {
 
