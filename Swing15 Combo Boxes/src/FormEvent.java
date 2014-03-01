@@ -10,7 +10,7 @@ public class FormEvent extends EventObject {
 	private String taxId;
 	private boolean usCitizen;
 	private String gender;
-	
+
 	public FormEvent(Object source, String name, String occupation,
 			String ageCat, String employmentCategory, String taxId,
 			boolean usCitizen, String gender) {
@@ -52,5 +52,4 @@ public class FormEvent extends EventObject {
 	public String getAgeCategory() {
 		return ageCategory.toString();
 	}
-
 }

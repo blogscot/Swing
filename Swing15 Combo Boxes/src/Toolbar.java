@@ -12,11 +12,10 @@ public class Toolbar extends JPanel {
 
 	private JButton helloButton;
 	private JButton goodbyeButton;
-
 	private StringListener textListener;
 
 	public Toolbar() {
-		
+
 		setBorder(BorderFactory.createEtchedBorder());
 		helloButton = new JButton("Hello");
 		goodbyeButton = new JButton("Goodbye");
@@ -25,9 +24,9 @@ public class Toolbar extends JPanel {
 
 		add(helloButton);
 		add(goodbyeButton);
-		
+
 		helloButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (textListener != null) {
@@ -35,14 +34,14 @@ public class Toolbar extends JPanel {
 				}
 			}
 		});
-		
+
 		goodbyeButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (textListener != null) {
 					textListener.textEmitted("GoodBye\n");
-				}				
+				}
 			}
 		});
 	}
@@ -50,5 +49,4 @@ public class Toolbar extends JPanel {
 	public void setStringListener(StringListener listener) {
 		this.textListener = listener;
 	}
-
 }

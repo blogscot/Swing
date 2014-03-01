@@ -15,29 +15,29 @@ public class MainFrame extends JFrame {
 	private TextPanel textPanel;
 	private Toolbar toolBar;
 	private FormPanel formPanel;
-	
+
 	public MainFrame() {
 		super("Hello, World!");
-		
+
 		setLayout(new BorderLayout());
-		
+
 		toolBar = new Toolbar();
 		textPanel = new TextPanel();
 		formPanel = new FormPanel();
-		
+
 		setJMenuBar(createMenuBar());
 
 		// Set up Listeners
 		toolBar.setStringListener(new StringListener() {
-			
+
 			@Override
 			public void textEmitted(String text) {
 				textPanel.appendText(text);
 			}
 		});
-		
+
 		formPanel.setFormListener(new FormListener() {
-			public void formEventOccurred(FormEvent e){
+			public void formEventOccurred(FormEvent e) {
 				String name = e.getName();
 				String occupation = e.getOccupation();
 				String ageCat = e.getAgeCategory();
@@ -45,27 +45,26 @@ public class MainFrame extends JFrame {
 				String taxId = e.getTaxId();
 				boolean usCitizen = e.IsUsCitizen();
 				String gender = e.getGender();
-				
+
 				textPanel.appendText(name + "\n" + occupation + "\n" + ageCat
 						+ "\n" + gender + "\n" + empCat + "\n"
 						+ (usCitizen ? "US Citizen" : "Non-US citizen") + "\n"
 						+ "TaxId: " + (taxId != null ? taxId : " -") + "\n");
 			}
 		});
-		
+
 		add(toolBar, BorderLayout.NORTH);
 		add(textPanel, BorderLayout.CENTER);
 		add(formPanel, BorderLayout.WEST);
-		
-		
+
 		setSize(600, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
-	
+
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		
+
 		JMenuItem importDataItem = new JMenuItem("Import Data");
 		JMenuItem exportDataItem = new JMenuItem("Export Data");
 		JMenuItem exitItem = new JMenuItem("Exit");
@@ -78,7 +77,7 @@ public class MainFrame extends JFrame {
 		fileMenu.add(exportDataItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
-		
+
 		// Set up Menu Item - Window
 		JMenu windowMenu = new JMenu("Window");
 
@@ -86,19 +85,19 @@ public class MainFrame extends JFrame {
 		JMenu showMenu = new JMenu("Show");
 		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
 		showFormItem.setSelected(true);
-		
+
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
-		
+
 		showFormItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem)e.getSource();
+				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 				formPanel.setVisible(menuItem.isSelected());
 			}
 		});
-		
-		return menuBar;		
+
+		return menuBar;
 	}
 }
