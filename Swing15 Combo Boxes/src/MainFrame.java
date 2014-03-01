@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -19,6 +20,7 @@ public class MainFrame extends JFrame {
 	private TextPanel textPanel;
 	private Toolbar toolBar;
 	private FormPanel formPanel;
+	private JFileChooser fileChooser;
 
 	public MainFrame() {
 		super("Hello, World!");
@@ -28,6 +30,8 @@ public class MainFrame extends JFrame {
 		toolBar = new Toolbar();
 		textPanel = new TextPanel();
 		formPanel = new FormPanel();
+		
+		fileChooser = new JFileChooser();
 
 		setJMenuBar(createMenuBar());
 
@@ -108,6 +112,27 @@ public class MainFrame extends JFrame {
 		
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 		
+		// Set up ActionListeners
+		importDataItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					System.out.println(fileChooser.getSelectedFile());
+				}
+			}
+		});
+		
+		exportDataItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					System.out.println(fileChooser.getSelectedFile());
+				}
+			}
+		});
+		
 		exitItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -122,7 +147,7 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-
+		
 		return menuBar;
 	}
 }
