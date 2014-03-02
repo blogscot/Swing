@@ -14,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import controller.Controller;
+
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -22,6 +24,7 @@ public class MainFrame extends JFrame {
 	private Toolbar toolBar;
 	private FormPanel formPanel;
 	private JFileChooser fileChooser;
+	private Controller controller;
 
 	public MainFrame() {
 		super("Hello, World!");
@@ -31,6 +34,8 @@ public class MainFrame extends JFrame {
 		toolBar = new Toolbar();
 		textPanel = new TextPanel();
 		formPanel = new FormPanel();
+		
+		controller = new Controller();
 
 		fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new PersonFileFilter());
@@ -49,18 +54,7 @@ public class MainFrame extends JFrame {
 
 		formPanel.setFormListener(new FormListener() {
 			public void formEventOccurred(FormEvent e) {
-				String name = e.getName();
-				String occupation = e.getOccupation();
-				String ageCat = e.getAgeCategory();
-				String empCat = e.getEmploymentCategory();
-				String taxId = e.getTaxId();
-				boolean usCitizen = e.IsUsCitizen();
-				String gender = e.getGender();
-
-				textPanel.appendText(name + "\n" + occupation + "\n" + ageCat
-						+ "\n" + gender + "\n" + empCat + "\n"
-						+ (usCitizen ? "US Citizen" : "Non-US citizen") + "\n"
-						+ "TaxId: " + (taxId != null ? taxId : " -") + "\n");
+				controller.addPerson(e);
 			}
 		});
 

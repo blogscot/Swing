@@ -124,8 +124,7 @@ public class FormPanel extends JPanel {
 				String genderCommand = genderGroup.getSelection()
 						.getActionCommand();
 
-				FormEvent event = new FormEvent(this, name, occupation, ageCat
-						.toString(), empCat, taxText, usCitzen, genderCommand);
+				FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxText, usCitzen, genderCommand);
 
 				if (formListener != null) {
 					formListener.formEventOccurred(event);
@@ -272,6 +271,10 @@ class AgeCategory {
 	public AgeCategory(int id, String text) {
 		this.id = id;
 		this.text = text;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String toString() {

@@ -1,19 +1,22 @@
 package gui;
 import java.util.EventObject;
 
+import model.EmploymentCategory;
+import model.Gender;
+
 public class FormEvent extends EventObject {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 	private String occupation;
-	private String ageCategory;
+	private int ageCategory;
 	private String employmentCategory;
 	private String taxId;
 	private boolean usCitizen;
 	private String gender;
 
 	public FormEvent(Object source, String name, String occupation,
-			String ageCat, String employmentCategory, String taxId,
+			int ageCat, String employmentCategory, String taxId,
 			boolean usCitizen, String gender) {
 		super(source);
 
@@ -50,7 +53,7 @@ public class FormEvent extends EventObject {
 		return occupation;
 	}
 
-	public String getAgeCategory() {
-		return ageCategory.toString();
+	public int getAgeCategory() {
+		return ageCategory;
 	}
 }
