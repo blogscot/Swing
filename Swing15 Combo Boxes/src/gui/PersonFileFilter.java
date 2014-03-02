@@ -21,10 +21,9 @@ public class PersonFileFilter extends FileFilter {
 			return false;
 		}
 		
-		if (extension == "per") {
+		if (extension.equals("per")) {
 			return true;
 		}
-		
 		return false;
 	}
 
