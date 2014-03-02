@@ -1,6 +1,9 @@
 package controller;
 
 import gui.FormEvent;
+
+import java.util.List;
+
 import model.AgeCategory;
 import model.Database;
 import model.EmploymentCategory;
@@ -10,6 +13,10 @@ import model.Person;
 public class Controller {
 
 	Database db = new Database();
+	
+	public List<Person> getPeople() {
+		return db.getPeople();
+	}
 
 	public void addPerson(FormEvent ev) {
 
@@ -57,14 +64,14 @@ public class Controller {
 
 		switch (gender) {
 		case "Male":
-			genderCategory = Gender.male;
+			genderCategory = Gender.Male;
 			break;
 		case "Female":
-			genderCategory = Gender.female;
+			genderCategory = Gender.Female;
 			break;
 		default:
 			// Prevent a null result
-			genderCategory = Gender.female;
+			genderCategory = Gender.Female;
 		}
 
 		Person person = new Person(name, occupation, ageCategory,
