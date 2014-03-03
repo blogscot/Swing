@@ -102,10 +102,16 @@ public class MainFrame extends JFrame {
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
 
+		// Set up Mnemonics
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		exitItem.setMnemonic(KeyEvent.VK_X);
 
+		// Set up Accelerators
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				ActionEvent.CTRL_MASK));
+		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				ActionEvent.CTRL_MASK));
+		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
 				ActionEvent.CTRL_MASK));
 
 		// Set up ActionListeners
