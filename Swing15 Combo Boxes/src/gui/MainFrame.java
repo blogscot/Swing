@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
 	private JFileChooser fileChooser;
 	private Controller controller;
 	private TablePanel tablePanel;
+	private PreferencesDialog prefsDialog;
 
 	public MainFrame() {
 		super("Hello, World!");
@@ -38,6 +39,7 @@ public class MainFrame extends JFrame {
 		textPanel = new TextPanel();
 		formPanel = new FormPanel();
 		tablePanel = new TablePanel();
+		prefsDialog = new PreferencesDialog(this);
 
 		controller = new Controller();
 
@@ -99,14 +101,26 @@ public class MainFrame extends JFrame {
 
 		// Set up Menu Item - Window
 		JMenu windowMenu = new JMenu("Window");
-
-		menuBar.add(windowMenu);
 		JMenu showMenu = new JMenu("Show");
+		JMenuItem prefsItem = new JMenuItem("Preferences...");
+		
+		menuBar.add(windowMenu);
+
 		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
 		showFormItem.setSelected(true);
 
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
+		windowMenu.add(prefsItem);
+		
+		prefsItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				prefsDialog.setVisible(true);
+				
+			}
+		});
 
 		// Set up Mnemonics
 		fileMenu.setMnemonic(KeyEvent.VK_F);
