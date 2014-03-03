@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
@@ -25,35 +27,30 @@ public class PreferencesDialog extends JDialog {
 	public PreferencesDialog(JFrame parent) {
 		super(parent, "Preferences", false);
 
-		setLayout(new GridBagLayout());
+		JPanel prefsPane = new JPanel();
+		Insets spinnerPadding = new Insets(10, 0, 10, 0);
+		Insets buttonPadding = new Insets(0, 0, 10, 0);
 		
+		this.setContentPane(prefsPane);
+		this.setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
-		
-		// set up Spinner Label
-		gc.gridx = 0;
-		gc.gridy = 0;
-		
-		gc.weightx = 1;
-		gc.weighty = 1;
-		gc.fill = GridBagConstraints.NONE;
-		
-		add(new JLabel("Port: "), gc);
-		
-		// set up Spinner
-		gc.gridx++;
-		add(portSpinner, gc);
-		
-		setSize(new Dimension(200, 100));
+
+		setSize(new Dimension(200, 120));
+		setResizable(false);
 		setLocationRelativeTo(parent);
+
+		// set up Spinner
+		gc.insets = spinnerPadding;
+		prefsPane.add(new JLabel("Port: "), gc);
+		prefsPane.add(portSpinner, gc);
 		
-		// Set up buttons - New Row
+		gc.weighty = 1;
+		gc.gridy += 2;
 		
-		gc.gridy++;
-		gc.gridx = 0;
-		add(okButton, gc);
-		
-		gc.gridx++;
-		add(cancelButton, gc);
+		// Set up buttons
+		gc.insets = buttonPadding;		
+		prefsPane.add(okButton, gc);		
+		prefsPane.add(cancelButton, gc);
 		
 		okButton.addActionListener(new ActionListener() {
 			
