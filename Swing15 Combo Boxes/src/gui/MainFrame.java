@@ -46,15 +46,15 @@ public class MainFrame extends JFrame {
 		controller = new Controller();
 
 		tablePanel.setData(controller.getPeople());
-		
+
 		tablePanel.setPersonTableListener(new PersonTableListener() {
 			public void rowDeleted(int row) {
 				controller.removePerson(row);
 			}
 		});
-		
+
 		prefsDialog.setPreferencesListener(new PreferencesListener() {
-			
+
 			@Override
 			public void preferencesSet(String user, String password, int port) {
 				prefs.put("user", user);
@@ -62,11 +62,11 @@ public class MainFrame extends JFrame {
 				prefs.putInt("port", port);
 			}
 		});
-		
+
 		String user = prefs.get("user", "");
 		String password = prefs.get("password", "");
 		int port = prefs.getInt("port", 3306);
-		
+
 		prefsDialog.setDefaults(user, password, port);
 
 		fileChooser = new JFileChooser();
@@ -122,7 +122,7 @@ public class MainFrame extends JFrame {
 		JMenu windowMenu = new JMenu("Window");
 		JMenu showMenu = new JMenu("Show");
 		JMenuItem prefsItem = new JMenuItem("Preferences...");
-		
+
 		menuBar.add(windowMenu);
 
 		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
@@ -131,13 +131,13 @@ public class MainFrame extends JFrame {
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
 		windowMenu.add(prefsItem);
-		
+
 		prefsItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				prefsDialog.setVisible(true);
-				
+
 			}
 		});
 
@@ -151,6 +151,8 @@ public class MainFrame extends JFrame {
 		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
 				ActionEvent.CTRL_MASK));
 		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
+				ActionEvent.CTRL_MASK));
+		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
 				ActionEvent.CTRL_MASK));
 
 		// Set up ActionListeners
