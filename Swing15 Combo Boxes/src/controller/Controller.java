@@ -82,6 +82,10 @@ public class Controller {
 		db.addPerson(person);
 
 	}
+
+	public void removePerson(int index) {
+		db.removePerson(index);
+	}
 	
 	public void saveToFile(File file) throws IOException {
 		db.saveToFile(file);
