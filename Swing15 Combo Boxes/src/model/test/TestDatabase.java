@@ -31,6 +31,12 @@ public class TestDatabase {
 			System.out.println("Saving to database failure.");
 		}
 		
+		try {
+			db.load();
+		} catch (SQLException e) {
+			System.out.println("Loading database failure.");
+		}
+		
 		db.disconnect();
 	}
 

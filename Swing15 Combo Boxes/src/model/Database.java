@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,6 +122,38 @@ public class Database {
 		insertStmt.close();		
 		checkStmt.close();
 
+	}
+	
+	public void load() throws SQLException {
+		
+		people.clear();
+
+		String sql = "select id, name, age, employment_status, occupation, us_citizen, tax_id, gender from people order by name";
+		Statement selectStmt = con.createStatement();
+
+		ResultSet results = selectStmt.executeQuery(sql);
+		
+		while(results.next()) {
+			
+			int id = results.getInt("id");
+			String name = results.getString("name");
+			AgeCategory ageCategory = AgeCategory.valueOf(results.getString("age"));
+			EmploymentCategory employmentCategory = EmploymentCategory.valueOf(results.getString("employment_status"));
+			String occupation = results.getString("occupation");
+			boolean usCitizen = results.getBoolean("us_citizen");
+			String taxId = results.getString("tax_id");
+			Gender gender = Gender.valueOf(results.getString("gender"));
+			
+			Person person = new Person(id, name, occupation, ageCategory,
+					employmentCategory, taxId, usCitizen, gender); 
+			people.add(person);
+
+			System.out.println(person);
+		}
+		
+		results.close();
+		selectStmt.close();
+		
 	}
 
 	public void addPerson(Person person) {

@@ -24,7 +24,6 @@ public class Person implements Serializable {
 		this.occupation = occupation;
 		this.ageCategory = ageCategory;
 		this.employmentCategory = employmentCategory;
-		this.ageCategory = ageCategory;
 		this.taxId = taxId;
 		this.usCitizen = usCitizen;
 		this.gender = gender;
@@ -33,6 +32,25 @@ public class Person implements Serializable {
 		count++;
 	}
 
+	public Person(int id, String name, String occupation,
+			AgeCategory ageCategory, EmploymentCategory employmentCategory,
+			String taxId, boolean usCitizen, Gender gender) {
+
+		this(name, occupation, ageCategory, employmentCategory, taxId,
+				usCitizen, gender);
+
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", name=" + name + ", occupation="
+				+ occupation + ", ageCategory=" + ageCategory
+				+ ", employmentCategory=" + employmentCategory + ", taxId="
+				+ taxId + ", usCitizen=" + usCitizen + ", gender=" + gender
+				+ "]";
+	}
+	
 	public int getId() {
 		return id;
 	}
