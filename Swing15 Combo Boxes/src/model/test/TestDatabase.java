@@ -21,9 +21,9 @@ public class TestDatabase {
 			e.printStackTrace();
 		}
 		
-		db.addPerson(new Person("Jim", "Disabled", AgeCategory.adult, EmploymentCategory.employed, null, false, Gender.Male));
+		db.addPerson(new Person("Janet", "Disabled", AgeCategory.adult, EmploymentCategory.employed, null, false, Gender.Female));
 		db.addPerson(new Person("Steve", "Mechanic", AgeCategory.adult, EmploymentCategory.employed, null, false, Gender.Male));
-		db.addPerson(new Person("Barbara", "Retired", AgeCategory.adult, EmploymentCategory.other, null, false, Gender.Female));
+		db.addPerson(new Person("Barbara", "Retired", AgeCategory.senior, EmploymentCategory.other, null, false, Gender.Female));
 		
 		try {
 			db.save();

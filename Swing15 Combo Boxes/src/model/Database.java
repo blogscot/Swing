@@ -56,12 +56,16 @@ public class Database {
 
 		String checkSql = "select count(*) as count from people where id=?";
 		String insertSql = "insert into people (id, name, age, employment_status, occupation, us_citizen, tax_id, gender) values (?,?,?,?,?,?,?,?)";
+		String updateSql = "update people set name=?, age=?, employment_status=?, occupation=?, us_citizen=?, tax_id=?, gender=? where id=?";
+		
 		PreparedStatement checkStmt;
 		PreparedStatement insertStmt;
+		PreparedStatement updateStmt;
 		int count = 0;
 		
 		checkStmt = con.prepareStatement(checkSql);
 		insertStmt = con.prepareStatement(insertSql);
+		updateStmt = con.prepareStatement(updateSql);
 
 		for (Person person : people) {
 
@@ -79,12 +83,13 @@ public class Database {
 			result.next();
 			
 			count = result.getInt(1);
+
+			int col = 1;
 			
 			// Person not found in database
 			if (count == 0) {
 				System.out.println("Inserting person " + id);
 
-				int col = 1;
 				insertStmt.setInt(col++, id);
 				insertStmt.setString(col++, name);
 				insertStmt.setString(col++, age.name());
@@ -98,11 +103,22 @@ public class Database {
 				
 			} else {
 				System.out.println("Updating person " + id);
+
+				updateStmt.setString(col++, name);
+				updateStmt.setString(col++, age.name());
+				updateStmt.setString(col++, emp.name());
+				updateStmt.setString(col++, occupation);
+				updateStmt.setBoolean(col++, isUs);
+				updateStmt.setString(col++, tax);
+				updateStmt.setString(col++, gender.name());
+				updateStmt.setInt(col, id);
 				
+				updateStmt.executeUpdate();
 			}
 		}
 		
-		insertStmt.close();
+		updateStmt.close();
+		insertStmt.close();		
 		checkStmt.close();
 
 	}
