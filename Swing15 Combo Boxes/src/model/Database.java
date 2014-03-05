@@ -39,7 +39,6 @@ public class Database {
 			String connectionUrl = "jdbc:mysql://localhost:3306/swingtest";
 			con = DriverManager.getConnection(connectionUrl, "swinguser",
 					"5ZCeDxLZQmdJ9xHL");
-
 		}
 	}
 
@@ -58,12 +57,12 @@ public class Database {
 		String checkSql = "select count(*) as count from people where id=?";
 		String insertSql = "insert into people (id, name, age, employment_status, occupation, us_citizen, tax_id, gender) values (?,?,?,?,?,?,?,?)";
 		String updateSql = "update people set name=?, age=?, employment_status=?, occupation=?, us_citizen=?, tax_id=?, gender=? where id=?";
-		
+
 		PreparedStatement checkStmt;
 		PreparedStatement insertStmt;
 		PreparedStatement updateStmt;
 		int count = 0;
-		
+
 		checkStmt = con.prepareStatement(checkSql);
 		insertStmt = con.prepareStatement(insertSql);
 		updateStmt = con.prepareStatement(updateSql);
@@ -78,15 +77,15 @@ public class Database {
 			boolean isUs = person.isUsCitizen();
 			String tax = person.getTaxId();
 			Gender gender = person.getGender();
-			
+
 			checkStmt.setInt(1, id);
 			ResultSet result = checkStmt.executeQuery();
 			result.next();
-			
+
 			count = result.getInt(1);
 
 			int col = 1;
-			
+
 			// Person not found in database
 			if (count == 0) {
 				System.out.println("Inserting person " + id);
@@ -99,9 +98,9 @@ public class Database {
 				insertStmt.setBoolean(col++, isUs);
 				insertStmt.setString(col++, tax);
 				insertStmt.setString(col, gender.name());
-	
+
 				insertStmt.executeUpdate();
-				
+
 			} else {
 				System.out.println("Updating person " + id);
 
@@ -113,47 +112,48 @@ public class Database {
 				updateStmt.setString(col++, tax);
 				updateStmt.setString(col++, gender.name());
 				updateStmt.setInt(col, id);
-				
+
 				updateStmt.executeUpdate();
 			}
 		}
-		
-		updateStmt.close();
-		insertStmt.close();		
-		checkStmt.close();
 
+		updateStmt.close();
+		insertStmt.close();
+		checkStmt.close();
 	}
-	
+
 	public void load() throws SQLException {
-		
+
 		people.clear();
 
-		String sql = "select id, name, age, employment_status, occupation, us_citizen, tax_id, gender from people order by name";
+		String sql = "select id, name, age, employment_status, occupation, us_citizen, tax_id, gender from people order by id";
 		Statement selectStmt = con.createStatement();
 
 		ResultSet results = selectStmt.executeQuery(sql);
-		
-		while(results.next()) {
-			
+
+		while (results.next()) {
+
 			int id = results.getInt("id");
 			String name = results.getString("name");
-			AgeCategory ageCategory = AgeCategory.valueOf(results.getString("age"));
-			EmploymentCategory employmentCategory = EmploymentCategory.valueOf(results.getString("employment_status"));
+			AgeCategory ageCategory = AgeCategory.valueOf(results
+					.getString("age"));
+			EmploymentCategory employmentCategory = EmploymentCategory
+					.valueOf(results.getString("employment_status"));
 			String occupation = results.getString("occupation");
 			boolean usCitizen = results.getBoolean("us_citizen");
 			String taxId = results.getString("tax_id");
 			Gender gender = Gender.valueOf(results.getString("gender"));
-			
+
 			Person person = new Person(id, name, occupation, ageCategory,
-					employmentCategory, taxId, usCitizen, gender); 
+					employmentCategory, taxId, usCitizen, gender);
 			people.add(person);
 
-			System.out.println(person);
+			// System.out.println(person);
 		}
-		
+
 		results.close();
 		selectStmt.close();
-		
+
 	}
 
 	public void addPerson(Person person) {

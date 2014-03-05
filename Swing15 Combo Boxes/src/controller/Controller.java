@@ -4,6 +4,7 @@ import gui.FormEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import model.AgeCategory;
@@ -15,9 +16,25 @@ import model.Person;
 public class Controller {
 
 	Database db = new Database();
-	
+
 	public List<Person> getPeople() {
 		return db.getPeople();
+	}
+
+	public void save() throws SQLException {
+		db.save();
+	}
+
+	public void connect() throws Exception {
+		db.connect();
+	}
+
+	public void load() throws SQLException {
+		db.load();
+	}
+
+	public void disconnect() {
+		db.disconnect();
 	}
 
 	public void addPerson(FormEvent ev) {
@@ -78,7 +95,7 @@ public class Controller {
 
 		Person person = new Person(name, occupation, ageCategory,
 				employmentCategory, taxId, usCitizen, genderCategory);
-		
+
 		db.addPerson(person);
 
 	}
@@ -86,11 +103,11 @@ public class Controller {
 	public void removePerson(int index) {
 		db.removePerson(index);
 	}
-	
+
 	public void saveToFile(File file) throws IOException {
 		db.saveToFile(file);
 	}
-	
+
 	public void loadFromFile(File file) throws IOException {
 		db.loadFromFile(file);
 	}

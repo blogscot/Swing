@@ -11,16 +11,17 @@ public class PersonTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	private List<Person> db;
-	
-	private String[] columnNames = {"ID","Name","Occupation","Age","Employment","US Citizen","Tax ID","Gender"};
+
+	private String[] columnNames = { "ID", "Name", "Occupation", "Age",
+			"Employment", "US Citizen", "Tax ID", "Gender" };
 
 	@Override
 	public String getColumnName(int column) {
 
 		return columnNames[column];
 	}
-	
-	public void seData(List<Person> db) {
+
+	public void setData(List<Person> db) {
 		this.db = db;
 	}
 

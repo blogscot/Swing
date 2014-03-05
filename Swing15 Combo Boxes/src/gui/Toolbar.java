@@ -1,4 +1,6 @@
 package gui;
+
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,43 +13,61 @@ public class Toolbar extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JButton helloButton;
-	private JButton goodbyeButton;
-	private StringListener textListener;
+	private JButton saveButton;
+	private JButton refreshButton;
+	private ToolBarListener toolBarListener;
+	private Color EnabledColor;
+	private Color disabledColor = Color.gray;
 
 	public Toolbar() {
 
 		setBorder(BorderFactory.createEtchedBorder());
-		helloButton = new JButton("Hello");
-		goodbyeButton = new JButton("Goodbye");
+		saveButton = new JButton("Save");
+		refreshButton = new JButton("Refresh");
+
+		EnabledColor = refreshButton.getForeground();
+		setSaveButtonEnabled(false);
 
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		add(helloButton);
-		add(goodbyeButton);
+		add(saveButton);
+		add(refreshButton);
 
-		helloButton.addActionListener(new ActionListener() {
+		saveButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (textListener != null) {
-					textListener.textEmitted("Hello\n");
+				if (toolBarListener != null) {
+					toolBarListener.saveEventOccurred();
+					setSaveButtonEnabled(false);
 				}
 			}
 		});
 
-		goodbyeButton.addActionListener(new ActionListener() {
+		refreshButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (textListener != null) {
-					textListener.textEmitted("GoodBye\n");
+				if (toolBarListener != null) {
+					toolBarListener.refreshEventOccurred();
+					setSaveButtonEnabled(true);
 				}
 			}
 		});
 	}
 
-	public void setStringListener(StringListener listener) {
-		this.textListener = listener;
+	public void setSaveButtonEnabled(boolean buttonEnabled) {
+
+		if (buttonEnabled) {
+			saveButton.setForeground(EnabledColor);
+			saveButton.setEnabled(true);
+		} else {
+			saveButton.setForeground(disabledColor);
+			saveButton.setEnabled(false);
+		}
+	}
+
+	public void setToolBarListener(ToolBarListener listener) {
+		this.toolBarListener = listener;
 	}
 }

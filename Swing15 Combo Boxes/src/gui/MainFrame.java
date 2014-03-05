@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -23,7 +24,6 @@ public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private TextPanel textPanel;
 	private Toolbar toolBar;
 	private FormPanel formPanel;
 	private JFileChooser fileChooser;
@@ -38,7 +38,6 @@ public class MainFrame extends JFrame {
 		setLayout(new BorderLayout());
 
 		toolBar = new Toolbar();
-		textPanel = new TextPanel();
 		formPanel = new FormPanel();
 		tablePanel = new TablePanel();
 		prefsDialog = new PreferencesDialog(this);
@@ -50,6 +49,7 @@ public class MainFrame extends JFrame {
 		tablePanel.setPersonTableListener(new PersonTableListener() {
 			public void rowDeleted(int row) {
 				controller.removePerson(row);
+				toolBar.setSaveButtonEnabled(true);
 			}
 		});
 
@@ -76,11 +76,42 @@ public class MainFrame extends JFrame {
 		setJMenuBar(createMenuBar());
 
 		// Set up Listeners
-		toolBar.setStringListener(new StringListener() {
+		toolBar.setToolBarListener(new ToolBarListener() {
 
 			@Override
-			public void textEmitted(String text) {
-				textPanel.appendText(text);
+			public void saveEventOccurred() {
+				try {
+					controller.connect();
+					controller.save();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							"Database Save failed.", "Database Save Error",
+							JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							e.getMessage(), "Database Connection Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+
+			@Override
+			public void refreshEventOccurred() {
+
+				try {
+					controller.connect();
+					controller.load();
+				} catch (SQLException e) {
+					JOptionPane
+							.showMessageDialog(MainFrame.this,
+									"Database Refresh failed.",
+									"Database Refresh Error",
+									JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							e.getMessage(), "Database Connection Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				tablePanel.refresh();
 			}
 		});
 
