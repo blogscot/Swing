@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class Toolbar extends JPanel {
 
@@ -23,7 +22,10 @@ public class Toolbar extends JPanel {
 
 		setBorder(BorderFactory.createEtchedBorder());
 		saveButton = new JButton("Save");
+        saveButton.setIcon(createIcon("/images/save.gif"));
+
 		refreshButton = new JButton("Refresh");
+        refreshButton.setIcon(createIcon("/images/refresh.png"));
 
 		EnabledColor = refreshButton.getForeground();
 		setSaveButtonEnabled(false);
@@ -66,6 +68,16 @@ public class Toolbar extends JPanel {
 			saveButton.setEnabled(false);
 		}
 	}
+
+    private ImageIcon createIcon(String path) {
+        URL url = getClass().getResource(path);
+
+        if (url == null) {
+            System.err.println("Unable to load image: " + path);
+        }
+
+        return new ImageIcon(url);
+    }
 
 	public void setToolBarListener(ToolBarListener listener) {
 		this.toolBarListener = listener;
