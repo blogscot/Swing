@@ -16,7 +16,6 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private Toolbar toolBar;
-    private TextPanel textPanel;
 	private FormPanel formPanel;
 	private JFileChooser fileChooser;
 	private Controller controller;
@@ -25,6 +24,7 @@ public class MainFrame extends JFrame {
 	private Preferences prefs = Preferences.userRoot().node("db");
     private JSplitPane splitPane;
     private JTabbedPane tabbedPane;
+    private MessagePanel messagePanel;
 
 	public MainFrame() {
 		super("Hello, World!");
@@ -32,17 +32,17 @@ public class MainFrame extends JFrame {
 		setLayout(new BorderLayout());
 
 		toolBar = new Toolbar();
-        textPanel = new TextPanel();
 		formPanel = new FormPanel();
 		tablePanel = new TablePanel();
 		prefsDialog = new PreferencesDialog(this);
         tabbedPane = new JTabbedPane();
+        messagePanel = new MessagePanel();
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel, tabbedPane);
 
         splitPane.setOneTouchExpandable(true);
 
         tabbedPane.addTab("Person Database", tablePanel);
-        tabbedPane.addTab("Messages", textPanel);
+        tabbedPane.addTab("Messages", messagePanel);
 
 		controller = new Controller();
 
