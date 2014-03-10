@@ -1,14 +1,13 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.*;
 
-public class Toolbar extends JPanel {
+public class Toolbar extends JToolBar {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,17 +19,16 @@ public class Toolbar extends JPanel {
 
 	public Toolbar() {
 
-		setBorder(BorderFactory.createEtchedBorder());
-		saveButton = new JButton("Save");
+		saveButton = new JButton();
         saveButton.setIcon(createIcon("/images/save.gif"));
+        saveButton.setToolTipText("Save");
 
-		refreshButton = new JButton("Refresh");
+		refreshButton = new JButton();
         refreshButton.setIcon(createIcon("/images/refresh.png"));
+        refreshButton.setToolTipText("Refresh");
 
 		EnabledColor = refreshButton.getForeground();
 		setSaveButtonEnabled(false);
-
-		setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		add(saveButton);
 		add(refreshButton);
