@@ -2,9 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.prefs.Preferences;
@@ -122,6 +120,17 @@ public class MainFrame extends JFrame {
 			}
 		});
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                // This is a work around to avoid InterruptedException on exit
+                // I've never seen it so it might be an old problem that John Purcell used to see
+                dispose();
+                System.gc();
+            }
+        });
+
 		add(toolBar, BorderLayout.NORTH);
 		add(tablePanel, BorderLayout.CENTER);
 		add(formPanel, BorderLayout.WEST);
@@ -129,7 +138,7 @@ public class MainFrame extends JFrame {
 		setSize(600, 500);
 		setLocation(500, 200);
 		setMinimumSize(new Dimension(550, 450));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setVisible(true);
 	}
 
@@ -177,14 +186,10 @@ public class MainFrame extends JFrame {
 		exitItem.setMnemonic(KeyEvent.VK_X);
 
 		// Set up Accelerators
-		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
-				ActionEvent.CTRL_MASK));
-		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
-				ActionEvent.CTRL_MASK));
-		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
-				ActionEvent.CTRL_MASK));
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
+		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 
 		// Set up ActionListeners
 		showFormItem.addActionListener(new ActionListener() {
@@ -239,7 +244,11 @@ public class MainFrame extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION);
 
 				if (action == JOptionPane.OK_OPTION) {
-					System.exit(0);
+					WindowListener[] listeners = getWindowListeners();
+
+                    for (WindowListener listener: listeners) {
+                        listener.windowClosing(new WindowEvent(MainFrame.this, 0));
+                    }
 				}
 			}
 		});
