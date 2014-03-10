@@ -45,13 +45,14 @@ public class FormPanel extends JPanel {
 
 		dim.width = 280;
 		setPreferredSize(dim);
+        setMinimumSize(dim);
 
 		nameLabel = new JLabel("Name: ");
 		occupationLabel = new JLabel("Occupation: ");
 		nameField = new JTextField(10);
 		occupationField = new JTextField(10);
-		ageList = new JList<AgeCategory>();
-		empCombo = new JComboBox<String>();
+		ageList = new JList<>();
+		empCombo = new JComboBox<>();
 		citizenCheck = new JCheckBox();
 		taxField = new JTextField(10);
 		taxLabel = new JLabel("Tax ID");
@@ -91,7 +92,7 @@ public class FormPanel extends JPanel {
 		});
 
 		// Set up List Box
-		DefaultListModel<AgeCategory> ageModel = new DefaultListModel<AgeCategory>();
+		DefaultListModel<AgeCategory> ageModel = new DefaultListModel<>();
 		ageModel.addElement(new AgeCategory(0, "Under 18"));
 		ageModel.addElement(new AgeCategory(1, "18 to 64"));
 		ageModel.addElement(new AgeCategory(2, "Over 65"));
@@ -102,7 +103,7 @@ public class FormPanel extends JPanel {
 		ageList.setSelectedIndex(0);
 
 		// Set up ComboBox
-		DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<String>();
+		DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<>();
 		empModel.addElement("Employed");
 		empModel.addElement("Self-Employed");
 		empModel.addElement("Unemployed");

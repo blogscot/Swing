@@ -7,14 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import controller.Controller;
 
@@ -29,6 +22,7 @@ public class MainFrame extends JFrame {
 	private TablePanel tablePanel;
 	private PreferencesDialog prefsDialog;
 	private Preferences prefs = Preferences.userRoot().node("db");
+    private JSplitPane splitPane;
 
 	public MainFrame() {
 		super("Hello, World!");
@@ -39,6 +33,9 @@ public class MainFrame extends JFrame {
 		formPanel = new FormPanel();
 		tablePanel = new TablePanel();
 		prefsDialog = new PreferencesDialog(this);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel, tablePanel);
+
+        splitPane.setOneTouchExpandable(true);
 
 		controller = new Controller();
 
@@ -131,9 +128,8 @@ public class MainFrame extends JFrame {
             }
         });
 
-		add(tablePanel, BorderLayout.CENTER);
         add(toolBar, BorderLayout.NORTH);
-		add(formPanel, BorderLayout.WEST);
+		add(splitPane, BorderLayout.CENTER);
 
 		setSize(600, 500);
 		setLocation(500, 200);
@@ -197,6 +193,11 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
+
+                if (menuItem.isSelected()){
+                    splitPane.setDividerLocation((int)formPanel.getMinimumSize().getWidth());
+                }
+
 				formPanel.setVisible(menuItem.isSelected());
 			}
 		});
