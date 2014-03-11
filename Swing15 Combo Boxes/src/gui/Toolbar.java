@@ -3,7 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 import javax.swing.*;
 
@@ -20,11 +19,11 @@ public class Toolbar extends JToolBar {
 	public Toolbar() {
 
 		saveButton = new JButton();
-        saveButton.setIcon(createIcon("/images/save.gif"));
+        saveButton.setIcon(Utils.createIcon("/images/save.gif"));
         saveButton.setToolTipText("Save");
 
 		refreshButton = new JButton();
-        refreshButton.setIcon(createIcon("/images/refresh.png"));
+        refreshButton.setIcon(Utils.createIcon("/images/refresh.png"));
         refreshButton.setToolTipText("Refresh");
 
 		EnabledColor = refreshButton.getForeground();
@@ -66,16 +65,6 @@ public class Toolbar extends JToolBar {
 			saveButton.setEnabled(false);
 		}
 	}
-
-    private ImageIcon createIcon(String path) {
-        URL url = getClass().getResource(path);
-
-        if (url == null) {
-            System.err.println("Unable to load image: " + path);
-        }
-
-        return new ImageIcon(url);
-    }
 
 	public void setToolBarListener(ToolBarListener listener) {
 		this.toolBarListener = listener;
