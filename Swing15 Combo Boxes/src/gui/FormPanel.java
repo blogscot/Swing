@@ -120,13 +120,13 @@ public class FormPanel extends JPanel {
                 String occupation = occupationField.getText();
                 AgeCategory ageCat = ageList.getSelectedValue();
                 String empCat = (String) empCombo.getSelectedItem();
-                boolean usCitzen = citizenCheck.isSelected();
-                String taxText = usCitzen ? taxField.getText() : null;
+                boolean usCitizen = citizenCheck.isSelected();
+                String taxText = usCitizen ? taxField.getText() : null;
 
                 String genderCommand = genderGroup.getSelection()
                         .getActionCommand();
 
-                FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxText, usCitzen, genderCommand);
+                FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxText, usCitizen, genderCommand);
 
                 if (formListener != null) {
                     formListener.formEventOccurred(event);

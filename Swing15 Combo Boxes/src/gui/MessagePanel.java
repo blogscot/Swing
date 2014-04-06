@@ -5,7 +5,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.BorderLayout;
+import java.awt.*;
 
 class ServerInfo {
     private String name;
@@ -55,8 +55,9 @@ public class MessagePanel extends JPanel {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) serverTree.getLastSelectedPathComponent();
 
-                Object userObject = node.getUserObject();
-                System.out.println(userObject);
+                if (node != null) {
+                    Object userObject = node.getUserObject();
+                }
             }
         });
 
