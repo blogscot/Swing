@@ -1,25 +1,29 @@
 package gui;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
-public class ServerTreeCellEditor implements TreeCellEditor {
+import javax.swing.AbstractCellEditor;
+import javax.swing.JCheckBox;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreePath;
 
-    private ServerTreeCellRenderer renderer;
+public class ServerTreeCellEditor extends AbstractCellEditor implements TreeCellEditor {
+
+	private static final long serialVersionUID = 1L;
+	private ServerTreeCellRenderer renderer;
     private JCheckBox checkBox;
     private ServerInfo info;
 
     public ServerTreeCellEditor() {
         renderer = new ServerTreeCellRenderer();
     }
-
+    
     @Override
     public Object getCellEditorValue() {
         info.setChecked(checkBox.isSelected());
@@ -70,5 +74,5 @@ public class ServerTreeCellEditor implements TreeCellEditor {
             checkBox.addItemListener(itemListener);
         }
         return component;
-    }
+    }    
 }
