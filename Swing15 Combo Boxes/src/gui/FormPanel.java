@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,262 +24,262 @@ import javax.swing.border.Border;
 
 public class FormPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private JLabel nameLabel;
-	private JLabel occupationLabel;
-	private JTextField nameField;
-	private JTextField occupationField;
-	private JButton okBtn;
-	private FormListener formListener;
-	private JList<AgeCategory> ageList;
-	private JComboBox<String> empCombo;
-	private JCheckBox citizenCheck;
-	private JTextField taxField;
-	private JLabel taxLabel;
-	private JRadioButton maleRadio;
-	private JRadioButton femaleRadio;
-	private ButtonGroup genderGroup;
+    private JLabel nameLabel;
+    private JLabel occupationLabel;
+    private JTextField nameField;
+    private JTextField occupationField;
+    private JButton okBtn;
+    private FormListener formListener;
+    private JList<AgeCategory> ageList;
+    private JComboBox<String> empCombo;
+    private JCheckBox citizenCheck;
+    private JTextField taxField;
+    private JLabel taxLabel;
+    private JRadioButton maleRadio;
+    private JRadioButton femaleRadio;
+    private ButtonGroup genderGroup;
 
-	public FormPanel() {
-		Dimension dim = getPreferredSize();
+    public FormPanel() {
+        Dimension dim = getPreferredSize();
 
-		dim.width = 280;
-		setPreferredSize(dim);
+        dim.width = 280;
+        setPreferredSize(dim);
         setMinimumSize(dim);
 
-		nameLabel = new JLabel("Name: ");
-		occupationLabel = new JLabel("Occupation: ");
-		nameField = new JTextField(10);
-		occupationField = new JTextField(10);
-		ageList = new JList<>();
-		empCombo = new JComboBox<>();
-		citizenCheck = new JCheckBox();
-		taxField = new JTextField(10);
-		taxLabel = new JLabel("Tax ID");
+        nameLabel = new JLabel("Name: ");
+        occupationLabel = new JLabel("Occupation: ");
+        nameField = new JTextField(10);
+        occupationField = new JTextField(10);
+        ageList = new JList<>();
+        empCombo = new JComboBox<>();
+        citizenCheck = new JCheckBox();
+        taxField = new JTextField(10);
+        taxLabel = new JLabel("Tax ID");
 
-		maleRadio = new JRadioButton("Male");
-		femaleRadio = new JRadioButton("Female");
-		genderGroup = new ButtonGroup();
-		maleRadio.setSelected(true);
-		maleRadio.setActionCommand("Male");
-		femaleRadio.setActionCommand("Female");
+        maleRadio = new JRadioButton("Male");
+        femaleRadio = new JRadioButton("Female");
+        genderGroup = new ButtonGroup();
+        maleRadio.setSelected(true);
+        maleRadio.setActionCommand("Male");
+        femaleRadio.setActionCommand("Female");
 
-		okBtn = new JButton("OK");
+        okBtn = new JButton("OK");
 
-		// Set up Mnemonics
-		okBtn.setMnemonic(KeyEvent.VK_O);
-		nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
-		nameLabel.setLabelFor(nameField);
+        // Set up Mnemonics
+        okBtn.setMnemonic(KeyEvent.VK_O);
+        nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        nameLabel.setLabelFor(nameField);
 
-		
-		// Set up gender radios
-		genderGroup.add(maleRadio);
-		genderGroup.add(femaleRadio);
 
-		// Set up Tax ID
-		taxLabel.setEnabled(false);
-		taxField.setEnabled(false);
+        // Set up gender radios
+        genderGroup.add(maleRadio);
+        genderGroup.add(femaleRadio);
 
-		citizenCheck.addActionListener(new ActionListener() {
+        // Set up Tax ID
+        taxLabel.setEnabled(false);
+        taxField.setEnabled(false);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				boolean isTicked = citizenCheck.isSelected();
+        citizenCheck.addActionListener(new ActionListener() {
 
-				taxLabel.setEnabled(isTicked);
-				taxField.setEnabled(isTicked);
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                boolean isTicked = citizenCheck.isSelected();
 
-		// Set up List Box
-		DefaultListModel<AgeCategory> ageModel = new DefaultListModel<>();
-		ageModel.addElement(new AgeCategory(0, "Under 18"));
-		ageModel.addElement(new AgeCategory(1, "18 to 64"));
-		ageModel.addElement(new AgeCategory(2, "Over 65"));
+                taxLabel.setEnabled(isTicked);
+                taxField.setEnabled(isTicked);
+            }
+        });
 
-		ageList.setModel(ageModel);
-		ageList.setPreferredSize(new Dimension(114, 66));
-		ageList.setBorder(BorderFactory.createEtchedBorder());
-		ageList.setSelectedIndex(0);
+        // Set up List Box
+        DefaultListModel<AgeCategory> ageModel = new DefaultListModel<>();
+        ageModel.addElement(new AgeCategory(0, "Under 18"));
+        ageModel.addElement(new AgeCategory(1, "18 to 64"));
+        ageModel.addElement(new AgeCategory(2, "Over 65"));
 
-		// Set up ComboBox
-		DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<>();
-		empModel.addElement("Employed");
-		empModel.addElement("Self-Employed");
-		empModel.addElement("Unemployed");
-		empCombo.setModel(empModel);
-		empCombo.setSelectedIndex(0);
-		empCombo.setEditable(true);
+        ageList.setModel(ageModel);
+        ageList.setPreferredSize(new Dimension(114, 66));
+        ageList.setBorder(BorderFactory.createEtchedBorder());
+        ageList.setSelectedIndex(0);
 
-		okBtn.addActionListener(new ActionListener() {
+        // Set up ComboBox
+        DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<>();
+        empModel.addElement("Employed");
+        empModel.addElement("Self-Employed");
+        empModel.addElement("Unemployed");
+        empCombo.setModel(empModel);
+        empCombo.setSelectedIndex(0);
+        empCombo.setEditable(true);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String name = nameField.getText();
-				String occupation = occupationField.getText();
-				AgeCategory ageCat = ageList.getSelectedValue();
-				String empCat = (String) empCombo.getSelectedItem();
-				boolean usCitzen = citizenCheck.isSelected();
-				String taxText = usCitzen ? taxField.getText() : null;
+        okBtn.addActionListener(new ActionListener() {
 
-				String genderCommand = genderGroup.getSelection()
-						.getActionCommand();
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String occupation = occupationField.getText();
+                AgeCategory ageCat = ageList.getSelectedValue();
+                String empCat = (String) empCombo.getSelectedItem();
+                boolean usCitzen = citizenCheck.isSelected();
+                String taxText = usCitzen ? taxField.getText() : null;
 
-				FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxText, usCitzen, genderCommand);
+                String genderCommand = genderGroup.getSelection()
+                        .getActionCommand();
 
-				if (formListener != null) {
-					formListener.formEventOccurred(event);
-				}
-			}
-		});
+                FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxText, usCitzen, genderCommand);
 
-		Border insideBorder = BorderFactory.createTitledBorder("Add Person");
-		Border outsideBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		setBorder(BorderFactory.createCompoundBorder(outsideBorder,
-				insideBorder));
+                if (formListener != null) {
+                    formListener.formEventOccurred(event);
+                }
+            }
+        });
 
-		layoutComponents();
-	}
+        Border insideBorder = BorderFactory.createTitledBorder("Add Person");
+        Border outsideBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        setBorder(BorderFactory.createCompoundBorder(outsideBorder,
+                insideBorder));
 
-	public void layoutComponents() {
-		setLayout(new GridBagLayout());
+        layoutComponents();
+    }
 
-		GridBagConstraints gc = new GridBagConstraints();
-		Insets withoutPadding = new Insets(0, 0, 0, 0);
-		Insets withPadding = new Insets(0, 0, 0, 5);
+    public void layoutComponents() {
+        setLayout(new GridBagLayout());
 
-		// Add Name Label - First Row
-		gc.weightx = 1;
-		gc.weighty = 0.1;
+        GridBagConstraints gc = new GridBagConstraints();
+        Insets withoutPadding = new Insets(0, 0, 0, 0);
+        Insets withPadding = new Insets(0, 0, 0, 5);
 
-		gc.gridx = 0;
-		gc.gridy = 0;
-		gc.fill = GridBagConstraints.NONE;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = withPadding;
-		add(nameLabel, gc);
+        // Add Name Label - First Row
+        gc.weightx = 1;
+        gc.weighty = 0.1;
 
-		// add Name field
-		gc.gridx++;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = withoutPadding;
-		add(nameField, gc);
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.fill = GridBagConstraints.NONE;
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.insets = withPadding;
+        add(nameLabel, gc);
 
-		// add Occupation Label - Next Row
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = withPadding;
-		add(occupationLabel, gc);
+        // add Name field
+        gc.gridx++;
+        gc.anchor = GridBagConstraints.LINE_START;
+        gc.insets = withoutPadding;
+        add(nameField, gc);
 
-		// add Occupation field
-		gc.gridx++;
-		gc.anchor = GridBagConstraints.LINE_START;
-		gc.insets = withoutPadding;
-		add(occupationField, gc);
+        // add Occupation Label - Next Row
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.insets = withPadding;
+        add(occupationLabel, gc);
 
-		// add List Box Label - Next Row
-		gc.weightx = 1;
-		gc.weighty = 0.2;
+        // add Occupation field
+        gc.gridx++;
+        gc.anchor = GridBagConstraints.LINE_START;
+        gc.insets = withoutPadding;
+        add(occupationField, gc);
 
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.FIRST_LINE_END;
-		gc.insets = withPadding;
-		add(new JLabel("Age: "), gc);
+        // add List Box Label - Next Row
+        gc.weightx = 1;
+        gc.weighty = 0.2;
 
-		// Add List Box
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(ageList, gc);
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        gc.insets = withPadding;
+        add(new JLabel("Age: "), gc);
 
-		// add Combo Box Label - Next Row
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.FIRST_LINE_END;
-		add(new JLabel("Employment: "), gc);
+        // Add List Box
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(ageList, gc);
 
-		// Add Combo Box
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(empCombo, gc);
+        // add Combo Box Label - Next Row
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        add(new JLabel("Employment: "), gc);
 
-		// add Check Box Label - Next Row
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.FIRST_LINE_END;
-		gc.insets = withPadding;
-		add(new JLabel("US Citizen: "), gc);
+        // Add Combo Box
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(empCombo, gc);
 
-		// Add Check Box
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(citizenCheck, gc);
+        // add Check Box Label - Next Row
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        gc.insets = withPadding;
+        add(new JLabel("US Citizen: "), gc);
 
-		// add Text Field Label - Next Row
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.FIRST_LINE_END;
-		gc.insets = withPadding;
-		add(taxLabel, gc);
+        // Add Check Box
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(citizenCheck, gc);
 
-		// Add Text Field
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(taxField, gc);
+        // add Text Field Label - Next Row
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        gc.insets = withPadding;
+        add(taxLabel, gc);
 
-		// add Radio Button Label - Next Row
-		gc.weightx = 1;
-		gc.weighty = 0.01;
+        // Add Text Field
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(taxField, gc);
 
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.LINE_END;
-		gc.insets = withPadding;
-		add(new JLabel("Gender: "), gc);
+        // add Radio Button Label - Next Row
+        gc.weightx = 1;
+        gc.weighty = 0.01;
 
-		// Add Male Radio Button
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(maleRadio, gc);
+        gc.gridy++;
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.insets = withPadding;
+        add(new JLabel("Gender: "), gc);
 
-		// Add Female Radio Button - Next Row
-		gc.gridy++;
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(femaleRadio, gc);
+        // Add Male Radio Button
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(maleRadio, gc);
 
-		// Add button - Next Row
-		gc.weightx = 1;
-		gc.weighty = 2.0;
+        // Add Female Radio Button - Next Row
+        gc.gridy++;
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(femaleRadio, gc);
 
-		gc.gridy++;
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(okBtn, gc);
-	}
+        // Add button - Next Row
+        gc.weightx = 1;
+        gc.weighty = 2.0;
 
-	public void setFormListener(FormListener formListener) {
-		this.formListener = formListener;
-	}
+        gc.gridy++;
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(okBtn, gc);
+    }
+
+    public void setFormListener(FormListener formListener) {
+        this.formListener = formListener;
+    }
 }
 
 class AgeCategory {
 
-	private int id;
-	private String text;
+    private int id;
+    private String text;
 
-	public AgeCategory(int id, String text) {
-		this.id = id;
-		this.text = text;
-	}
+    public AgeCategory(int id, String text) {
+        this.id = id;
+        this.text = text;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String toString() {
-		return text;
-	}
+    public String toString() {
+        return text;
+    }
 }

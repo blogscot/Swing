@@ -17,62 +17,62 @@ import model.Person;
 
 public class TablePanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private JTable table;
-	private PersonTableModel tableModel;
-	private JPopupMenu popup;
-	private PersonTableListener personTableListener;
+    private JTable table;
+    private PersonTableModel tableModel;
+    private JPopupMenu popup;
+    private PersonTableListener personTableListener;
 
-	public TablePanel() {
+    public TablePanel() {
 
-		tableModel = new PersonTableModel();
-		table = new JTable(tableModel);
-		popup = new JPopupMenu();
+        tableModel = new PersonTableModel();
+        table = new JTable(tableModel);
+        popup = new JPopupMenu();
 
-		JMenuItem removeItem = new JMenuItem("Delete row");
-		popup.add(removeItem);
+        JMenuItem removeItem = new JMenuItem("Delete row");
+        popup.add(removeItem);
 
-		table.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() {
 
-			@Override
-			public void mousePressed(MouseEvent e) {
+            @Override
+            public void mousePressed(MouseEvent e) {
 
-				int row = table.rowAtPoint(e.getPoint());
-				table.getSelectionModel().setSelectionInterval(row, row);
-				if (e.getButton() == MouseEvent.BUTTON3) {
-					popup.show(table, e.getX(), e.getY());
-				}
-			}
-		});
+                int row = table.rowAtPoint(e.getPoint());
+                table.getSelectionModel().setSelectionInterval(row, row);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    popup.show(table, e.getX(), e.getY());
+                }
+            }
+        });
 
-		removeItem.addActionListener(new ActionListener() {
+        removeItem.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
 
-				int row = table.getSelectedRow();
-				if (personTableListener != null) {
-					personTableListener.rowDeleted(row);
-					tableModel.fireTableRowsDeleted(row, row);
-				}
-			}
-		});
+                int row = table.getSelectedRow();
+                if (personTableListener != null) {
+                    personTableListener.rowDeleted(row);
+                    tableModel.fireTableRowsDeleted(row, row);
+                }
+            }
+        });
 
-		setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
-		add(new JScrollPane(table), BorderLayout.CENTER);
-	}
+        add(new JScrollPane(table), BorderLayout.CENTER);
+    }
 
-	public void setData(List<Person> db) {
-		tableModel.setData(db);
-	}
+    public void setData(List<Person> db) {
+        tableModel.setData(db);
+    }
 
-	public void refresh() {
-		tableModel.fireTableDataChanged();
-	}
+    public void refresh() {
+        tableModel.fireTableDataChanged();
+    }
 
-	public void setPersonTableListener(PersonTableListener listener) {
-		this.personTableListener = listener;
-	}
+    public void setPersonTableListener(PersonTableListener listener) {
+        this.personTableListener = listener;
+    }
 }
