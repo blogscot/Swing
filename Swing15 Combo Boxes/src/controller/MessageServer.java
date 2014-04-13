@@ -1,6 +1,7 @@
 package controller;
 
 import gui.Message;
+
 import java.util.*;
 
 /*
@@ -48,7 +49,7 @@ public class MessageServer implements Iterable<Message> {
 
     private Iterator<Message> iterator;
 
-    class MessageIterator implements Iterator {
+    class MessageIterator implements Iterator<Message> {
 
         public MessageIterator(List<Message> messages) {
             iterator = messages.iterator();
@@ -60,7 +61,7 @@ public class MessageServer implements Iterable<Message> {
         }
 
         @Override
-        public Object next() {
+        public Message next() {
 
             try {
                 Thread.sleep(1000);
