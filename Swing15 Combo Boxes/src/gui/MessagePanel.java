@@ -1,17 +1,16 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -20,7 +19,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import controller.MessageServer;
 
-public class MessagePanel extends JPanel {
+public class MessagePanel extends JPanel implements ProgressDialogListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTree serverTree;
@@ -30,10 +29,13 @@ public class MessagePanel extends JPanel {
 
 	private Set<Integer> selectedServers;
 	private MessageServer messageServer;
+	SwingWorker<List<Message>, Integer> worker;
+	
+	public MessagePanel(JFrame parent) {
 
-	public MessagePanel() {
-
-		progressDialog = new ProgressDialog((Window)getParent());
+		progressDialog = new ProgressDialog(parent, "Messages downloading...");
+		progressDialog.setListener(this);
+		
 		messageServer = new MessageServer();
 		selectedServers = new TreeSet<Integer>();
 		selectedServers.add(0);
@@ -69,7 +71,6 @@ public class MessagePanel extends JPanel {
 				messageServer.setSelectedServers(selectedServers);
 
 				retrieveMessages();
-
 			}
 
 			@Override
@@ -83,41 +84,33 @@ public class MessagePanel extends JPanel {
 	}
 
 	private void retrieveMessages() {
-		
-		System.out.println("Messages waiting: " + messageServer.getMessagesCount());
 
-		SwingUtilities.invokeLater(new Runnable() {
+		progressDialog.setMaximum(messageServer.getMessagesCount());
+		progressDialog.setVisible(true);
 
-			@Override
-			public void run() {
-				
-				System.out.println("Showing modal runnable");
-				progressDialog.setVisible(true);
-				System.out.println("Finished showing modal runnable");
-			}
-		});
-		
-		
-		SwingWorker<List<Message>, Integer> worker = new SwingWorker<List<Message>, Integer>() {
+		worker = new SwingWorker<List<Message>, Integer>() {
 
 			@Override
 			protected void done() {
+				progressDialog.setVisible(false);
+				if (isCancelled()) return;
+				
 				try {
 					List<Message> retrievedMessages = get();
 					System.out.println("Retrieved " + retrievedMessages.size()
 							+ " messages");
 				} catch (InterruptedException | ExecutionException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					// e.printStackTrace();
 				}
-				
-				progressDialog.setVisible(false);
+
 			}
 
 			@Override
 			protected void process(List<Integer> counts) {
 				int retrieved = counts.get(counts.size() - 1);
-				System.out.println("Got " + retrieved + " messages.");
+
+				progressDialog.setValue(retrieved);
 			}
 
 			@Override
@@ -126,13 +119,14 @@ public class MessagePanel extends JPanel {
 				List<Message> retrievedMessages = new ArrayList<Message>();
 				int count = 0;
 				for (Message message : messageServer) {
+					
+					if (isCancelled()) break; 
 					System.out.println(message.getTitle());
 
 					retrievedMessages.add(message);
 					count++;
 					publish(count);
 				}
-
 				return retrievedMessages;
 			}
 		};
@@ -177,5 +171,12 @@ public class MessagePanel extends JPanel {
 		top.add(branch2);
 
 		return top;
+	}
+
+	@Override
+	public void progressDialogCancelled() {
+		if (worker != null) {
+			worker.cancel(true);
+		}
 	}
 }
