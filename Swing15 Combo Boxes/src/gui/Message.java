@@ -12,4 +12,8 @@ public class Message {
     public String getTitle() {
         return title;
     }
+
+	public String getContents() {
+		return contents;
+	}
 }
