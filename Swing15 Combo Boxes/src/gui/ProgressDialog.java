@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Window;
@@ -90,15 +91,18 @@ public class ProgressDialog extends JDialog {
 			@Override
 			public void run() {
 
-				if (visible == false) {
+				if (!visible) {
 					try {
+						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						System.out.println("setVisible: Thread Interrupted");
 					}
 				} else {
 					progressBar.setValue(0);
+					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				}
+				
 				ProgressDialog.super.setVisible(visible);
 			}
 		});
