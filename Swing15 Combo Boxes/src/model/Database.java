@@ -22,24 +22,43 @@ public class Database {
 	private List<Person> people;
 	private Connection con;
 
+	private int port;
+	private String user;
+	private String password;
+
 	public Database() {
 		people = new ArrayList<Person>();
 	}
 
+	public void configure(int port, String user, String password)
+			throws Exception {
+
+		this.port = port;
+		this.user = user;
+		this.password = password;
+
+		if (con != null) {
+			disconnect();
+			connect();
+		}
+	}
+
 	public void connect() throws Exception {
 
-		if (con == null) {
+		if (con != null)
+			return;
 
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				throw new Exception("JDBC Driver not found");
-			}
-
-			String connectionUrl = "jdbc:mysql://localhost:3306/swingtest";
-			con = DriverManager.getConnection(connectionUrl, "swinguser",
-					"5ZCeDxLZQmdJ9xHL");
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new Exception("JDBC Driver not found");
 		}
+
+		String url = String.format("jdbc:mysql://localhost:%d/swingtest", port);
+
+		con = DriverManager.getConnection(url, user, password);
+		
+	// 5ZCeDxLZQmdJ9xHL
 	}
 
 	public void disconnect() {
@@ -50,6 +69,8 @@ public class Database {
 				System.out.println("JDBC database: connection close failed.");
 			}
 		}
+		
+		con = null;
 	}
 
 	public void save() throws SQLException {

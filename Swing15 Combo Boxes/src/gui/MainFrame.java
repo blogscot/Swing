@@ -30,267 +30,289 @@ import controller.Controller;
 
 public class MainFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Toolbar toolBar;
-    private FormPanel formPanel;
-    private JFileChooser fileChooser;
-    private Controller controller;
-    private TablePanel tablePanel;
-    private PreferencesDialog prefsDialog;
-    private Preferences prefs = Preferences.userRoot().node("db");
-    private JSplitPane splitPane;
-    private JTabbedPane tabPane;
-    private MessagePanel messagePanel;
+	private Toolbar toolBar;
+	private FormPanel formPanel;
+	private JFileChooser fileChooser;
+	private Controller controller;
+	private TablePanel tablePanel;
+	private PreferencesDialog prefsDialog;
+	private Preferences prefs = Preferences.userRoot().node("db");
+	private JSplitPane splitPane;
+	private JTabbedPane tabPane;
+	private MessagePanel messagePanel;
 
-    public MainFrame() {
-        super("Hello, World!");
+	public MainFrame() {
+		super("Hello, World!");
 
-        setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 
-        toolBar = new Toolbar();
-        formPanel = new FormPanel();
-        tablePanel = new TablePanel();
-        prefsDialog = new PreferencesDialog(this);
-        tabPane = new JTabbedPane();
-        messagePanel = new MessagePanel(this);
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel, tabPane);
+		toolBar = new Toolbar();
+		formPanel = new FormPanel();
+		tablePanel = new TablePanel();
+		prefsDialog = new PreferencesDialog(this);
+		tabPane = new JTabbedPane();
+		messagePanel = new MessagePanel(this);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel,
+				tabPane);
 
-        splitPane.setOneTouchExpandable(true);
+		splitPane.setOneTouchExpandable(true);
 
-        tabPane.addTab("Person Database", tablePanel);
-        tabPane.addTab("Messages", messagePanel);
+		tabPane.addTab("Person Database", tablePanel);
+		tabPane.addTab("Messages", messagePanel);
 
-        controller = new Controller();
+		controller = new Controller();
 
-        tablePanel.setData(controller.getPeople());
+		tablePanel.setData(controller.getPeople());
 
-        tablePanel.setPersonTableListener(new PersonTableListener() {
-            public void rowDeleted(int row) {
-                controller.removePerson(row);
-                toolBar.setSaveButtonEnabled(true);
-            }
-        });
-        
-        tabPane.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				int tabIndex = tabPane.getSelectedIndex();
-				
-				if (tabIndex == 1) { /* messages panel */
-					messagePanel.refresh();
-				}
-				
+		tablePanel.setPersonTableListener(new PersonTableListener() {
+			public void rowDeleted(int row) {
+				controller.removePerson(row);
+				toolBar.setSaveButtonEnabled(true);
 			}
 		});
 
-        prefsDialog.setPreferencesListener(new PreferencesListener() {
+		tabPane.addChangeListener(new ChangeListener() {
 
-            @Override
-            public void preferencesSet(String user, String password, int port) {
-                prefs.put("user", user);
-                prefs.put("password", password);
-                prefs.putInt("port", port);
-            }
-        });
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				int tabIndex = tabPane.getSelectedIndex();
 
-        String user = prefs.get("user", "");
-        String password = prefs.get("password", "");
-        int port = prefs.getInt("port", 3306);
+				if (tabIndex == 1) { /* messages panel */
+					messagePanel.refresh();
+				}
 
-        prefsDialog.setDefaults(user, password, port);
+			}
+		});
 
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new PersonFileFilter());
-        fileChooser.setAcceptAllFileFilterUsed(false);
+		prefsDialog.setPreferencesListener(new PreferencesListener() {
 
-        setJMenuBar(createMenuBar());
+			@Override
+			public void preferencesSet(String user, String password, int port) {
+				prefs.put("user", user);
+				prefs.put("password", password);
+				prefs.putInt("port", port);
 
-        // Set up Listeners
-        toolBar.setToolBarListener(new ToolBarListener() {
+				try {
+					controller.configure(port, user, password);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							"Unable to re-connect to database.");
+				}
+			}
+		});
 
-            @Override
-            public void saveEventOccurred() {
-                try {
-                    controller.connect();
-                    controller.save();
-                } catch (SQLException e) {
-                    JOptionPane.showMessageDialog(MainFrame.this,
-                            "Database Save failed.", "Database Save Error",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(MainFrame.this,
-                            e.getMessage(), "Database Connection Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            }
+		String user = prefs.get("user", "");
+		String password = prefs.get("password", "");
+		int port = prefs.getInt("port", 3306);
 
-            @Override
-            public void refreshEventOccurred() {
+		prefsDialog.setDefaults(user, password, port);
+		
+		try {
+			controller.configure(port, user, password);
+		} catch (Exception e) {
+			// This shouldn't happen - database is not connected
+			System.err.println("Can't connect to database.");
+		}
 
-                try {
-                    controller.connect();
-                    controller.load();
-                } catch (SQLException e) {
-                    JOptionPane
-                            .showMessageDialog(MainFrame.this,
-                                    "Database Refresh failed.",
-                                    "Database Refresh Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(MainFrame.this,
-                            e.getMessage(), "Database Connection Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-                tablePanel.refresh();
-            }
-        });
+		fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new PersonFileFilter());
+		fileChooser.setAcceptAllFileFilterUsed(false);
 
-        formPanel.setFormListener(new FormListener() {
-            public void formEventOccurred(FormEvent e) {
-                controller.addPerson(e);
-                tablePanel.refresh();
-            }
-        });
+		setJMenuBar(createMenuBar());
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                // This is a work around to avoid InterruptedException on exit
-                // I've never seen it so it might be an old problem that John Purcell used to see
-                dispose();
-                System.gc();
-            }
-        });
+		// Set up Listeners
+		toolBar.setToolBarListener(new ToolBarListener() {
 
-        add(toolBar, BorderLayout.NORTH);
-        add(splitPane, BorderLayout.CENTER);
+			@Override
+			public void saveEventOccurred() {
+				try {
+					controller.connect();
+					controller.save();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							"Database Save failed.", "Database Save Error",
+							JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							e.getMessage(), "Database Connection Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
 
-        setSize(600, 500);
-        setLocation(500, 200);
-        setMinimumSize(new Dimension(550, 450));
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setVisible(true);
-    }
+			@Override
+			public void refreshEventOccurred() {
 
-    private JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
+				try {
+					controller.connect();
+					controller.load();
+				} catch (SQLException e) {
+					JOptionPane
+							.showMessageDialog(MainFrame.this,
+									"Database Refresh failed.",
+									"Database Refresh Error",
+									JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(MainFrame.this,
+							e.getMessage(), "Database Connection Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				tablePanel.refresh();
+			}
+		});
 
-        JMenuItem importDataItem = new JMenuItem("Import Data");
-        JMenuItem exportDataItem = new JMenuItem("Export Data");
-        JMenuItem exitItem = new JMenuItem("Exit");
+		formPanel.setFormListener(new FormListener() {
+			public void formEventOccurred(FormEvent e) {
+				controller.addPerson(e);
+				tablePanel.refresh();
+			}
+		});
 
-        // Set up Menu Item - File
-        JMenu fileMenu = new JMenu("File");
-        menuBar.add(fileMenu);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				// This is a work around to avoid InterruptedException on exit
+				// I've never seen it so it might be an old problem that John
+				// Purcell used to see
+				dispose();
+				System.gc();
+			}
+		});
 
-        fileMenu.add(importDataItem);
-        fileMenu.add(exportDataItem);
-        fileMenu.addSeparator();
-        fileMenu.add(exitItem);
+		add(toolBar, BorderLayout.NORTH);
+		add(splitPane, BorderLayout.CENTER);
 
-        // Set up Menu Item - Window
-        JMenu windowMenu = new JMenu("Window");
-        JMenu showMenu = new JMenu("Show");
-        JMenuItem prefsItem = new JMenuItem("Preferences...");
+		setSize(600, 500);
+		setLocation(500, 200);
+		setMinimumSize(new Dimension(550, 450));
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setVisible(true);
+	}
 
-        menuBar.add(windowMenu);
+	private JMenuBar createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
 
-        JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
-        showFormItem.setSelected(true);
+		JMenuItem importDataItem = new JMenuItem("Import Data");
+		JMenuItem exportDataItem = new JMenuItem("Export Data");
+		JMenuItem exitItem = new JMenuItem("Exit");
 
-        showMenu.add(showFormItem);
-        windowMenu.add(showMenu);
-        windowMenu.add(prefsItem);
+		// Set up Menu Item - File
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
 
-        prefsItem.addActionListener(new ActionListener() {
+		fileMenu.add(importDataItem);
+		fileMenu.add(exportDataItem);
+		fileMenu.addSeparator();
+		fileMenu.add(exitItem);
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                prefsDialog.setVisible(true);
+		// Set up Menu Item - Window
+		JMenu windowMenu = new JMenu("Window");
+		JMenu showMenu = new JMenu("Show");
+		JMenuItem prefsItem = new JMenuItem("Preferences...");
 
-            }
-        });
+		menuBar.add(windowMenu);
 
-        // Set up Mnemonics
-        fileMenu.setMnemonic(KeyEvent.VK_F);
-        exitItem.setMnemonic(KeyEvent.VK_X);
+		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
+		showFormItem.setSelected(true);
 
-        // Set up Accelerators
-        exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
-        importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK));
-        exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
-        prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
+		showMenu.add(showFormItem);
+		windowMenu.add(showMenu);
+		windowMenu.add(prefsItem);
 
-        // Set up ActionListeners
-        showFormItem.addActionListener(new ActionListener() {
+		prefsItem.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				prefsDialog.setVisible(true);
 
-                if (menuItem.isSelected()) {
-                    splitPane.setDividerLocation((int) formPanel.getMinimumSize().getWidth());
-                }
+			}
+		});
 
-                formPanel.setVisible(menuItem.isSelected());
-            }
-        });
+		// Set up Mnemonics
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		exitItem.setMnemonic(KeyEvent.VK_X);
 
-        importDataItem.addActionListener(new ActionListener() {
+		// Set up Accelerators
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				InputEvent.CTRL_MASK));
+		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				InputEvent.CTRL_MASK));
+		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
+				InputEvent.CTRL_MASK));
+		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+				InputEvent.CTRL_MASK));
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        controller.loadFromFile(fileChooser.getSelectedFile());
-                        tablePanel.refresh();
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(MainFrame.this,
-                                "File import failed!", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
+		// Set up ActionListeners
+		showFormItem.addActionListener(new ActionListener() {
 
-        exportDataItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        controller.saveToFile(fileChooser.getSelectedFile());
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(MainFrame.this,
-                                "File save failed!", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
+				if (menuItem.isSelected()) {
+					splitPane.setDividerLocation((int) formPanel
+							.getMinimumSize().getWidth());
+				}
 
-        exitItem.addActionListener(new ActionListener() {
+				formPanel.setVisible(menuItem.isSelected());
+			}
+		});
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
+		importDataItem.addActionListener(new ActionListener() {
 
-                int action = JOptionPane.showConfirmDialog(MainFrame.this,
-                        "Do you really want to quit?", "Confirm Exit",
-                        JOptionPane.OK_CANCEL_OPTION);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					try {
+						controller.loadFromFile(fileChooser.getSelectedFile());
+						tablePanel.refresh();
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(MainFrame.this,
+								"File import failed!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 
-                if (action == JOptionPane.OK_OPTION) {
-                    WindowListener[] listeners = getWindowListeners();
+		exportDataItem.addActionListener(new ActionListener() {
 
-                    for (WindowListener listener : listeners) {
-                        listener.windowClosing(new WindowEvent(MainFrame.this, 0));
-                    }
-                }
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					try {
+						controller.saveToFile(fileChooser.getSelectedFile());
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(MainFrame.this,
+								"File save failed!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 
-        return menuBar;
-    }
+		exitItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				int action = JOptionPane.showConfirmDialog(MainFrame.this,
+						"Do you really want to quit?", "Confirm Exit",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (action == JOptionPane.OK_OPTION) {
+					WindowListener[] listeners = getWindowListeners();
+
+					for (WindowListener listener : listeners) {
+						listener.windowClosing(new WindowEvent(MainFrame.this,
+								0));
+					}
+				}
+			}
+		});
+
+		return menuBar;
+	}
 }
