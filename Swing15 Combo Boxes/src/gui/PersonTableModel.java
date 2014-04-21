@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import model.EmploymentCategory;
 import model.Person;
 
 public class PersonTableModel extends AbstractTableModel {
@@ -25,6 +26,7 @@ public class PersonTableModel extends AbstractTableModel {
 	public boolean isCellEditable(int row, int column) {
 		switch (column) {
 		case 1:
+		case 4:
 		case 5:
 			return true;
 		default:
@@ -32,8 +34,6 @@ public class PersonTableModel extends AbstractTableModel {
 		}
 	}
 
-	
-	
 	@Override
 	public void setValueAt(Object aValue, int row, int column) {
 		
@@ -45,11 +45,14 @@ public class PersonTableModel extends AbstractTableModel {
 		case 1:
 			person.setName((String)aValue);
 			break;
+		case 4:
+			person.setEmploymentCategory((EmploymentCategory)aValue);
+			break;
 		case 5:
 			person.setUsCitizen((Boolean)aValue);
+			break;
 		default:
 		}
-		
 	}
 
 	@Override
@@ -58,12 +61,13 @@ public class PersonTableModel extends AbstractTableModel {
 		switch (column) {
 		case 0:
 			return Integer.class;
+		case 4:
+			return EmploymentCategory.class;
 		case 5:
 			return Boolean.class;
 		case 1:
 		case 2:
 		case 3:
-		case 4:
 		case 6:
 		case 7:
 			return String.class;
