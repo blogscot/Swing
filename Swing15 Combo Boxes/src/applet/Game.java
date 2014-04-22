@@ -26,16 +26,17 @@ public class Game extends JComponent {
 	private RoundRectangle2D.Double bat = new RoundRectangle2D.Double(200, 200,
 			100, 10, 20, 20);
 
-	private double speed = 4.0;
+	private double speed = 6.0;
 	private int xDirectionBall = 1;
 	private int yDirectionBall = 1;
-	
+
 	private double batSpeed = 10.0;
 
 	private BufferedImage buffer;
+	private boolean checkIntersection = true;
 
 	public Game() {
-		
+
 		addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
@@ -64,10 +65,10 @@ public class Game extends JComponent {
 
 					@Override
 					public boolean dispatchKeyEvent(KeyEvent e) {
-						
+
 						int key = e.getKeyCode();
-						
-						switch(key){
+
+						switch (key) {
 						case KeyEvent.VK_UP:
 							bat.y -= batSpeed;
 							break;
@@ -80,7 +81,7 @@ public class Game extends JComponent {
 						case KeyEvent.VK_RIGHT:
 							bat.x += batSpeed;
 						}
-						
+
 						return false;
 					}
 				});
@@ -92,7 +93,7 @@ public class Game extends JComponent {
 				buffer = null;
 			}
 		});
-		
+
 		Cursor hiddenCursor = getToolkit().createCustomCursor(
 				new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
 				new Point(1, 1), "");
@@ -145,6 +146,15 @@ public class Game extends JComponent {
 		} else if (ball.y > getHeight() - ball.getBounds().height) {
 			yDirectionBall = -1;
 			ball.y = getHeight() - ball.getBounds().height;
+		}
+
+		if (ball.intersects(bat.getBounds2D())) {
+			if (checkIntersection) {
+				yDirectionBall = -yDirectionBall;
+				checkIntersection = false;
+			} else {
+				checkIntersection = true;
+			}
 		}
 
 		repaint();
