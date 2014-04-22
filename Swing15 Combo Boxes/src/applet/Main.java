@@ -1,5 +1,6 @@
 package applet;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +12,8 @@ public class Main extends JApplet implements ActionListener {
 
 	private Timer timer;
 	private Game game = new Game();
+	private StartPanel startPanel;
+	private CardLayout cards;
 	
 	@Override
 	public void destroy() {
@@ -19,12 +22,23 @@ public class Main extends JApplet implements ActionListener {
 	@Override
 	public void init() {
 		
+		cards = new CardLayout();
+		startPanel = new StartPanel();
+		
+		startPanel.setListener(new StartPanelListener() {
+			
+			@Override
+			public void startGame() {
+				cards.show(Main.this.getContentPane(), "game");
+			}
+		});
+		
 		timer = new Timer(20, this);
 		
-		setLayout(new BorderLayout());
-		
+		setLayout(cards);
 		setSize(600, 500);
-		add(game, BorderLayout.CENTER);
+		add(startPanel, "start");
+		add(game, "game");
 	}
 
 	@Override

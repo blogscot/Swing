@@ -8,6 +8,8 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,12 +35,12 @@ public class Game extends JComponent {
 	private BufferedImage buffer;
 
 	public Game() {
+		
 		addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -83,6 +85,14 @@ public class Game extends JComponent {
 					}
 				});
 
+		addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				buffer = null;
+			}
+		});
+		
 		Cursor hiddenCursor = getToolkit().createCustomCursor(
 				new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
 				new Point(1, 1), "");
@@ -140,14 +150,8 @@ public class Game extends JComponent {
 		repaint();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#update(java.awt.Graphics)
-	 */
 	@Override
 	public void update(Graphics g) {
 		paint(g);
 	}
-
 }
